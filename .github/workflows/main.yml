@@ -1,90 +1,41 @@
-name: Code Coverage and Tests
-
+name: Tests and Code Coverage
 on:
   push:
     branches:
       - $default-branch
-      - github-actions-setup
   pull_request:
     branches:
       - $default-branch
-
 jobs:
-  api-checks:
+  web-tests:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v4
-
-    - name: Navigate to API folder
-      run: cd ${GITHUB_WORKSPACE}/api/src/InControl.Api/
-
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '8.0.101'
-
-    - name: Restore Dependencies
-      run: dotnet restore
-
-    - name: Run .NET tests
-      run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-      continue-on-error: true
-
-    # - name: Publish .NET Test Results
-      # run:
-
-  web-checks:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+      - name: Change Directory
+        run: cd web/
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm install
+      - name: Run Tests
+        run: npm test -- --coverage
+  infra-tests:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v4
-
-    - name: Navigate to Web
-      run: cd ${GITHUB_WORKSPACE}/web/
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '20.x'
-        cache: 'npm'
-        cache-dependency-path: '${GITHUB_WORKSPACE}/infra/package-lock.json,web/package-lock.json'
-
-    - name: Install Dependencies
-      run: npm install
-
-    - name: Run Tests
-      run: npm test -- --coverage
-      continue-on-error: true
-
-  infrastructure-checks:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repo
-      uses: actions/checkout@v4
-
-    - name: pwd
-      run: pwd
-
-    - name: ls
-      run: ls -al
-
-    - name: Setup NodeJS
-      uses: actions/setup-node@v2
-      with:
-        node-version: '20.x'
-        cache: 'npm'
-        cache-dependency-path: '${GITHUB_WORKSPACE}/infra/package-lock.json,web/package-lock.json'
-
-    - name: Navigate to Infra
-      run: cd ${GITHUB_WORKSPACE}/infra/ && ls -al
-
-    - name: Install Dependencies
-      run: npm install
-
-    - name: Run Tests
-      run: npm test -- --coverage
-      continue-on-error: true
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+      - name: Change Directory
+        run: cd infra/
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm install
+      - name: Run Tests
+        run: npm test -- --coverage
