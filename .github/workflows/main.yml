@@ -41,12 +41,9 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8
-      # - uses: nuget/setup-nuget@v2
-      #   with:
-      #     nuget-api-key: ${{ secrets.NUGET_API_KEY }}
-      #     nuget-version: '5.x'
+      - uses: nuget/setup-nuget@v2
       - name: Install Dependencies
-        run: dotnet restore
+        run: nuget restore InControl.sln
         working-directory: ./api
       - name: Build
         run: dotnet build --no-restore --configuration Release
