@@ -23,6 +23,11 @@ jobs:
       - name: Run Tests
         run: npm test -- --coverage --passWithNoTests
         working-directory: ./web
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: GiessC/in-control
   infrastructure-unit:
     runs-on: ubuntu-latest
     steps:
@@ -38,6 +43,11 @@ jobs:
       - name: Run Tests
         run: npm test -- --coverage --passWithNoTests
         working-directory: ./infra
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: GiessC/in-control
   api-unit:
     runs-on: ubuntu-latest
     steps:
@@ -57,9 +67,14 @@ jobs:
         run: nuget restore InControl.sln
         working-directory: ./api
       - name: Build
-        run: dotnet build --no-restore --configuration Release
+        run: dotnet build --no-restore --configuration Release /p:ContinuousIntegrationBuild=true
         working-directory: ./api
       - name: Run Tests
-        run: dotnet test
+        run: dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
         working-directory: ./api
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: GiessC/in-control
 
