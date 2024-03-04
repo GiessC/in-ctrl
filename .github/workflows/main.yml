@@ -21,3 +21,30 @@ jobs:
       - name: Run Tests
         run: npm test -- --coverage
         working-directory: ./web
+  infrastructure-unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install Dependencies
+        run: npm install
+        working-directory: ./infra
+      - name: Run Tests
+        run: npm test -- --coverage
+        working-directory: ./infra
+  api-unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8
+      - name: Install Dependencies
+        run: dotnet restore
+        working-directory: ./api/tests/InControl.Api.Tests
+      - name: Run Tests
+        run: dotnet test --no-build --verbosity normal
+        working-directory: ./api/tests/InControl.Api.Tests
+
