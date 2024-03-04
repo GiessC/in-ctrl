@@ -70,7 +70,7 @@ jobs:
         run: dotnet build --no-restore --configuration Release /p:ContinuousIntegrationBuild=true
         working-directory: ./api
       - name: Run Tests
-        run: dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+        run: dotnet test --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
         working-directory: ./api
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
