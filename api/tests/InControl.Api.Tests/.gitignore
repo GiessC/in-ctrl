@@ -1,3 +1,4 @@
 bin/
 obj/
 appsettings.local.json
+coverage.*.xml
