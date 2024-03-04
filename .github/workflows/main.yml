@@ -46,9 +46,11 @@ jobs:
       run: cd ${GITHUB_WORKSPACE}/web/
 
     - name: Setup Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
       with:
-        node-version: '14'
+        node-version: 20
+        cache: 'npm'
+        cache-dependency-path: '${GITHUB_WORKSPACE}infra/package-lock.json,web/package-lock.json'
 
     - name: Install Dependencies
       run: npm install
