@@ -29,6 +29,7 @@ jobs:
           name: codecov-web-unit
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: GiessC/in-control
+          directory: ./web
           fail_ci_if_error: true
           flags: web-unit
           verbose: true
@@ -53,6 +54,7 @@ jobs:
           name: codecov-infra-unit
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: GiessC/in-control
+          directory: ./infra
           fail_ci_if_error: true
           flags: infra-unit
           verbose: true
@@ -86,6 +88,7 @@ jobs:
           name: codecov-api-unit
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: GiessC/in-control
+          directory: ./api
           fail_ci_if_error: true
           flags: api-unit
           verbose: true
