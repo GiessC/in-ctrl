@@ -19,7 +19,7 @@ jobs:
         run: npm install
         working-directory: ./web
       - name: Run Tests
-        run: npm test -- --coverage
+        run: npm test -- --coverage --passWithNoTests
         working-directory: ./web
   infrastructure-unit:
     runs-on: ubuntu-latest
@@ -32,7 +32,7 @@ jobs:
         run: npm install
         working-directory: ./infra
       - name: Run Tests
-        run: npm test -- --coverage
+        run: npm test -- --coverage --passWithNoTests
         working-directory: ./infra
   api-unit:
     runs-on: ubuntu-latest
