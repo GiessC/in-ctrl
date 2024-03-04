@@ -46,7 +46,7 @@ jobs:
         working-directory: ./api/tests/InControl.Api.Tests
       - name: Build
         run: dotnet build --no-restore --configuration Release
-        working-directory: /api/tests/InControl.Api.Tests
+        working-directory: ./api/tests/InControl.Api.Tests
       - name: Run Tests
         run: dotnet test
         working-directory: ./api/tests/InControl.Api.Tests
