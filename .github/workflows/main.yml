@@ -64,13 +64,15 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v4
 
-    - name: Setup Node.js
+    - name: Setup NodeJS
       uses: actions/setup-node@v4
       with:
-        node-version: '20.0.0'
+        node-version: 20
+        cache: 'npm'
+        cache-dependency-path: 'infra/package-lock.json,web/package-lock.json'
 
     - name: Navigate to Infra
-      run: cd infra/
+      run: cd infra/ && ls -al
 
     - name: Install Dependencies
       run: npm install
