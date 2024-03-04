@@ -25,8 +25,12 @@ jobs:
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
         with:
+          name: codecov-web-unit
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: GiessC/in-control
+          fail_ci_if_error: true
+          flags: web-unit
+          verbose: true
   infrastructure-unit:
     runs-on: ubuntu-latest
     steps:
@@ -45,8 +49,12 @@ jobs:
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
         with:
+          name: codecov-infra-unit
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: GiessC/in-control
+          fail_ci_if_error: true
+          flags: infra-unit
+          verbose: true
   api-unit:
     runs-on: ubuntu-latest
     steps:
@@ -74,6 +82,10 @@ jobs:
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
         with:
+          name: codecov-api-unit
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: GiessC/in-control
+          fail_ci_if_error: true
+          flags: api-unit
+          verbose: true
 
