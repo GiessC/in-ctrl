@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
+      - name: Test Fix cd
+        run: GITHUB_WORKSPACE=$(echo $GITHUB_WORKSPACE | tr -d '\r')
       - name: Change Directory
         run: cd $GITHUB_WORKSPACE/web/
       - name: pwd
