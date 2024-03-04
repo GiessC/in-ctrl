@@ -41,13 +41,17 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8
+      # - uses: nuget/setup-nuget@v2
+      #   with:
+      #     nuget-api-key: ${{ secrets.NUGET_API_KEY }}
+      #     nuget-version: '5.x'
       - name: Install Dependencies
         run: dotnet restore
-        working-directory: ./api/tests/InControl.Api.Tests
+        working-directory: ./api
       - name: Build
         run: dotnet build --no-restore --configuration Release
-        working-directory: ./api/tests/InControl.Api.Tests
+        working-directory: ./api
       - name: Run Tests
         run: dotnet test
-        working-directory: ./api/tests/InControl.Api.Tests
+        working-directory: ./api
 
