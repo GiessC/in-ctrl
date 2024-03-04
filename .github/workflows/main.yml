@@ -8,39 +8,16 @@ on:
     branches:
       - $default-branch
 jobs:
-  web-tests:
+  web-unit:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-      - name: Test Fix cd
-        run: GITHUB_WORKSPACE=$(echo $GITHUB_WORKSPACE | tr -d '\r')
-      - name: Change Directory
-        run: cd $GITHUB_WORKSPACE/web/
-      - name: pwd
-        run: pwd
-      # - name: Setup NodeJS
-      #   uses: actions/setup-node@v4
-      #   with:
-      #     node-version: '20'
-      #     cache: 'npm'
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
       - name: Install Dependencies
         run: npm install
+        working-directory: ./web
       - name: Run Tests
         run: npm test -- --coverage
-  infra-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-      - name: Change Directory
-        run: cd $GITHUB_WORKSPACE/infra/
-      # - name: Setup NodeJS
-      #   uses: actions/setup-node@v4
-      #   with:
-      #     node-version: '20'
-      #     cache: 'npm'
-      - name: Install Dependencies
-        run: npm install
-      - name: Run Tests
-        run: npm test -- --coverage
+        working-directory: ./web
