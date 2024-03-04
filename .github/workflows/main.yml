@@ -64,13 +64,13 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v4
 
-    - name: Navigate to Infra
-      run: cd infra/
-
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20.0.0'
+
+    - name: Navigate to Infra
+      run: cd infra/
 
     - name: Install Dependencies
       run: npm install
