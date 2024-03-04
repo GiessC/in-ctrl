@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - $default-branch
+      - github-actions-setup
   pull_request:
     branches:
       - $default-branch
