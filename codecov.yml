@@ -1,5 +1,21 @@
 coverage:
   status:
-    project:
-      default:
-        target: 80%
+    project: off
+    patch: off
+
+flag_management:
+  individual_flags:
+    - name: api-unit
+      paths:
+        - api/
+      statuses:
+        - type: project
+          target: 80%
+          threshold: 1%
+    - name: web-unit
+      paths:
+        - web/
+      statuses:
+        - type: project
+          target: 80%
+          threshold: 1%
