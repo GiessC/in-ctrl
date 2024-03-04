@@ -15,7 +15,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Change Directory
         run: cd web/
-      - run: pwd
+      - name: pwd
+        run: pwd
       - name: Setup NodeJS
         uses: actions/setup-node@v4
         with:
