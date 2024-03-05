@@ -16,13 +16,11 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        cache-dependency-path: ${{ github.workspace }}/web/package-lock.json
     - uses: actions/cache@v4
       with:
         path: |
-            ~/.npm
-            ${{ github.workspace }}/.next/cache
+          ~/.npm
+          ${{ github.workspace }}/web/.next/cache
         key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
         restore-keys: |
           ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
