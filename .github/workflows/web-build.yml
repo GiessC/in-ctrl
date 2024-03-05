@@ -17,18 +17,18 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: $GITHUB_WORKSPACE/web/package-lock.json
+        cache-dependency-path: ${{ github.workspace }}/web/package-lock.json
     - run: npm ci
-      working-directory: $GITHUB_WORKSPACE/web/
+      working-directory: ${{ github.workspace }}/web/
     - run: npm run build --if-present
-      working-directory: $GITHUB_WORKSPACE/web/
+      working-directory: ${{ github.workspace }}/web/
     - run: npm test -- --coverage
-      working-directory: $GITHUB_WORKSPACE/web/
+      working-directory: ${{ github.workspace }}/web/
     - name: Upload test coverage
       uses: codecov/codecov-action@v4
       with:
         fail_ci_if_error: true
-        files: $GITHUB_WORKSPACE/web/coverage/coverage-final.json
+        files: ${{ github.workspace }}/web/coverage/coverage-final.json
         flags: web-unit
         name: web-unit
         token: ${{ secrets.CODECOV_TOKEN }}

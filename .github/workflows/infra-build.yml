@@ -17,18 +17,18 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: $GITHUB_WORKSPACE/infra/package-lock.json
+        cache-dependency-path: ${{ github.workspace }}/infra/package-lock.json
     - run: npm ci
-      working-directory: $GITHUB_WORKSPACE/infra/
+      working-directory: ${{ github.workspace }}/infra/
     - run: npm run build --if-present
-      working-directory: $GITHUB_WORKSPACE/infra/
+      working-directory: ${{ github.workspace }}/infra/
     - run: npm test -- --coverage
-      working-directory: $GITHUB_WORKSPACE/infra/
+      working-directory: ${{ github.workspace }}/infra/
     - name: Upload test coverage
       uses: codecov/codecov-action@v4
       with:
         fail_ci_if_error: true
-        files: $GITHUB_WORKSPACE/infra/coverage/coverage-final.json
+        files: ${{ github.workspace }}/infra/coverage/coverage-final.json
         flags: infra-unit
         name: infra-unit
         token: ${{ secrets.CODECOV_TOKEN }}
