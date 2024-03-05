@@ -1,0 +1,39 @@
+on:
+  push:
+    branches:
+      - $default-branch
+    paths:
+      - 'web/**'
+jobs:
+  web-unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8
+      - uses: nuget/setup-nuget@v2
+      - uses: actions/cache@v4
+        id: web-cache
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-web-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: ${{ runner.os }}-web-
+      - name: Install dependencies
+        run: nuget restore
+        working-directory: $GITHUB_WORKSPACE/web/
+      - name: Build
+        run: dotnet build --no-restore --configuration Release /p:ContinuousIntegrationBuild=true
+        working-directory: $GITHUB_WORKSPACE/web/
+      - name: Test
+        run: dotnet test --no-build --configuration Release --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+        working-directory: $GITHUB_WORKSPACE/web/
+      - name: Upload test coverage
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: GiessC/in-control
+          directory: $GITHUB_WORKSPACE/web
+          fail_ci_if_error: true
+          flags: web-unit
+
