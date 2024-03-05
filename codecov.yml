@@ -1,28 +1,46 @@
+codecov:
+  require_ci_to_pass: true
 coverage:
+  precision: 2
+  round: down
+  range: "80...100"
   status:
-    project: off
-    patch: off
+    project:
+      default:
+        target: 80%
+        threshold: 1%
+        branches:
+          - main
+        if_ci_failed: error
+        only_pulls: false
+        flags:
+          - api-unit
+          - web-unit
+          - infra-unit
+        paths:
+          - api/
+          - web/
+          - infra/
 
 flag_management:
+  default_rules:
+    carryforward: true
+    statuses:
+      - type: project
+        target: 80%
+        threshold: 1%
+      - type: patch
+        target: 85%
   individual_flags:
-    - name: api-unit
+    - name: api
       paths:
-        - api/
-      statuses:
-        - type: project
-          target: 80%
-          threshold: 1%
-    - name: web-unit
+      - api/
+      carryforward: true
+    - name: web
       paths:
-        - web/
-      statuses:
-        - type: project
-          target: 80%
-          threshold: 1%
-    - name: infra-unit
+      - web/
+      carryforward: true
+    - name: infra
       paths:
-        - infra/
-      statuses:
-        - type: project
-          target: 80%
-          threshold: 1%
+      - infra/
+      carryforward: true
