@@ -43,7 +43,7 @@ jobs:
         flags: api-unit
   web-build:
     name: Web Build and Test
-    runs-on: ubuntu-latests
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Setup NodeJS
