@@ -1,3 +1,4 @@
+name: API Tests and Deploy
 on:
   push:
     branches:

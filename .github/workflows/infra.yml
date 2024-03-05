@@ -1,3 +1,4 @@
+name: Infra Tests and Deploy
 on:
   push:
     branches:

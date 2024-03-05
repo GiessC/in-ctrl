@@ -1,3 +1,4 @@
+name: Web Test and Deploy
 on:
   push:
     branches:
