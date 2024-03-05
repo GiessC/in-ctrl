@@ -25,18 +25,18 @@ jobs:
           ${{ runner.os }}-nuget-
     - name: Restore dependencies
       run: nuget restore
-      working-directory: $GITHUB_WORKSPACE/api/
+      working-directory: ${{ github.workspace }}/api/
     - name: Build
       run: dotnet build --no-restore --configuration Release /p:ContinuousIntegrationBuild=true
-      working-directory: $GITHUB_WORKSPACE/api/
+      working-directory: ${{ github.workspace }}/api/
     - name: Test
       run: dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-      working-directory: $GITHUB_WORKSPACE/api/
+      working-directory: ${{ github.workspace }}/api/
     - name: Upload test coverage
       uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         slug: GiessC/in-control
-        directory: $GITHUB_WORKSPACE/api/
+        directory: ${{ github.workspace }}/api/
         fail_ci_if_error: true
         flags: api-unit
