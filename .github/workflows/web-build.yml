@@ -1,0 +1,35 @@
+name: Web Build and Test
+on:
+  push:
+    branches: [ $default-branch, "github-actions-setup" ]
+  pull_request:
+    branches: [ $default-branch ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: $GITHUB_WORKSPACE/web/package-lock.json
+    - run: npm ci
+      working-directory: $GITHUB_WORKSPACE/web/
+    - run: npm run build --if-present
+      working-directory: $GITHUB_WORKSPACE/web/
+    - run: npm test -- --coverage
+      working-directory: $GITHUB_WORKSPACE/web/
+    - name: Upload test coverage
+      uses: codecov/codecov-action@v4
+      with:
+        fail_ci_if_error: true
+        files: $GITHUB_WORKSPACE/web/coverage/coverage-final.json
+        flags: web-unit
+        name: web-unit
+        token: ${{ secrets.CODECOV_TOKEN }}
+        verbose: true
