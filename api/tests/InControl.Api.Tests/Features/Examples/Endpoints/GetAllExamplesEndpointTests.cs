@@ -19,7 +19,6 @@ public class GetAllExamplesEndpointTests
         var response = endpoint.Response;
 
         // Then
-        false.Should().BeTrue();
         response.Should().NotBeNull();
         response.Should().BeOfType<GetAllExamplesResponse>();
         response
