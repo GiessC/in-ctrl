@@ -22,7 +22,7 @@ jobs:
       working-directory: ${{ github.workspace }}/infra/
     - run: npm run build --if-present
       working-directory: ${{ github.workspace }}/infra/
-    - run: npm test -- --coverage
+    - run: npm test -- --coverage --config ${{ github.workspace }}/infra/jest.config.ts
       working-directory: ${{ github.workspace }}/infra/
     - name: Upload test coverage
       uses: codecov/codecov-action@v4
