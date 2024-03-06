@@ -4,7 +4,7 @@ public class ExampleDto(Guid repositoryId, Guid exampleId)
 {
     private const string PK_PREFIX = "REPO#";
     private const string PK_SUFFIX = "#EXAMPLE#";
-    private const string SK_SUFFIX = "";
+    private const string SK_SUFFIX = "#EXAMPlE";
     public readonly string Pk = CreatePk(repositoryId, exampleId);
     public readonly string Sk = CreateSk(repositoryId);
     public readonly Guid RepositoryId = repositoryId;
