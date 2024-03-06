@@ -1,8 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using FastEndpoints;
 using InControl.Api.Extensions.Startup;
 
 namespace InControl.Api;
 
+[ExcludeFromCodeCoverage]
 internal static class Program
 {
     private static void Main(string[] args)
