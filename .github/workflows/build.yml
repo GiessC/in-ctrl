@@ -36,6 +36,7 @@ jobs:
     - name: Upload test coverage
       uses: codecov/codecov-action@v4
       with:
+        name: api-unit
         token: ${{ secrets.CODECOV_TOKEN }}
         slug: GiessC/in-control
         directory: ${{ github.workspace }}/api/
