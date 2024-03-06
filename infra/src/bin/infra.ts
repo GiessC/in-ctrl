@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 import { App } from 'aws-cdk-lib';
 import 'source-map-support/register';
-import { InfraStack } from '../lib/infra-stack';
+import { AuthStack } from '../lib/auth-stack';
 
 const app = new App();
-new InfraStack(app, 'InfraStack');
+new AuthStack(app, 'InfraStack');
+app.synth();
