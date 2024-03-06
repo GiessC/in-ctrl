@@ -6,27 +6,41 @@ on:
     branches: [ $default-branch ]
 
 jobs:
+  detect-changes:
+    name: Detect File Changes
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      infra: ${{ steps.changes.outputs.infra }}
+      api: ${{ steps.changes.outputs.api }}
+      web: ${{ steps.changes.outputs.web }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            infra:
+              - 'infra/**'
+            api:
+              - 'api/**'
+            web:
+              - 'web/**'
   api-build:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.api == 'true'
     name: API Build and Test
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: dorny/paths-filter@v3
-      id: changes
-      with:
-        filters: |
-          api:
-            - 'api/**'
     - name: Setup .NET
-      if: steps.changes.outputs.infra == 'false'
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8
     - name: Setup NuGet
-      if: steps.changes.outputs.infra == 'false'
       uses: nuget/setup-nuget@v2
     - name: Cache
-      if: steps.changes.outputs.infra == 'false'
       uses: actions/cache@v4
       with:
         path: ~/.nuget/packages
@@ -34,19 +48,15 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-nuget-
     - name: Restore dependencies
-      if: steps.changes.outputs.infra == 'false'
       run: nuget restore
       working-directory: ${{ github.workspace }}/api/
     - name: Build
-      if: steps.changes.outputs.infra == 'false'
       run: dotnet build --no-restore --configuration Release /p:ContinuousIntegrationBuild=true
       working-directory: ${{ github.workspace }}/api/
     - name: Test
-      if: steps.changes.outputs.infra == 'false'
       run: dotnet test --no-build --configuration Release --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
       working-directory: ${{ github.workspace }}/api/
     - name: Upload test coverage
-      if: steps.changes.outputs.infra == 'false'
       uses: codecov/codecov-action@v4
       with:
         name: api-unit
@@ -56,23 +66,17 @@ jobs:
         fail_ci_if_error: true
         flags: api-unit
   web-build:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.web == 'true'
     name: Web Build and Test
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: dorny/paths-filter@v3
-      id: changes
-      with:
-        filters: |
-          web:
-            - 'web/**'
     - name: Setup NodeJS
-      if: steps.changes.outputs.web == 'false'
       uses: actions/setup-node@v4
       with:
         node-version: '20.x'
     - uses: actions/cache@v4
-      if: steps.changes.outputs.web == 'false'
       with:
         path: |
           ~/.npm
@@ -81,16 +85,12 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
     - run: npm ci
-      if: steps.changes.outputs.web == 'false'
       working-directory: ${{ github.workspace }}/web/
     - run: npm run build --if-present
-      if: steps.changes.outputs.web == 'false'
       working-directory: ${{ github.workspace }}/web/
     - run: npm run test -- --config ${{ github.workspace }}/web/jest.config.ts
-      if: steps.changes.outputs.web == 'false'
       working-directory: ${{ github.workspace }}/web/
     - name: Upload test coverage
-      if: steps.changes.outputs.web == 'false'
       uses: codecov/codecov-action@v4
       with:
         fail_ci_if_error: true
@@ -100,34 +100,25 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
         verbose: true
   infra-build:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.infra == 'true'
     name: Infrastructure Build and Test
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: dorny/paths-filter@v3
-      id: changes
-      with:
-        filters: |
-          infra:
-            - 'infra/**'
     - name: Setup NodeJS
-      if: steps.changes.outputs.infra == 'false'
       uses: actions/setup-node@v4
       with:
         node-version: '20.x'
         cache: 'npm'
         cache-dependency-path: ${{ github.workspace }}/infra/package-lock.json
     - run: npm ci
-      if: steps.changes.outputs.infra == 'false'
       working-directory: ${{ github.workspace }}/infra/
     - run: npm run build --if-present
-      if: steps.changes.outputs.infra == 'false'
       working-directory: ${{ github.workspace }}/infra/
     - run: npm run test -- --config ${{ github.workspace }}/infra/jest.config.ts
-      if: steps.changes.outputs.infra == 'false'
       working-directory: ${{ github.workspace }}/infra/
     - name: Upload test coverage
-      if: steps.changes.outputs.infra == 'false'
       uses: codecov/codecov-action@v4
       with:
         codecov_yml_path: ${{ github.workspace }}/codecov.yml
