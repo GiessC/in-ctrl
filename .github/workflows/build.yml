@@ -12,17 +12,21 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: dorny/paths-filter@v3
+      id: changes
       with:
         filters: |
           api:
             - 'api/**'
     - name: Setup .NET
+      if: steps.changes.outputs.infra == 'true'
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8
     - name: Setup NuGet
+      if: steps.changes.outputs.infra == 'true'
       uses: nuget/setup-nuget@v2
     - name: Cache
+      if: steps.changes.outputs.infra == 'true'
       uses: actions/cache@v4
       with:
         path: ~/.nuget/packages
@@ -30,15 +34,19 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-nuget-
     - name: Restore dependencies
+      if: steps.changes.outputs.infra == 'true'
       run: nuget restore
       working-directory: ${{ github.workspace }}/api/
     - name: Build
+      if: steps.changes.outputs.infra == 'true'
       run: dotnet build --no-restore --configuration Release /p:ContinuousIntegrationBuild=true
       working-directory: ${{ github.workspace }}/api/
     - name: Test
+      if: steps.changes.outputs.infra == 'true'
       run: dotnet test --no-build --configuration Release --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
       working-directory: ${{ github.workspace }}/api/
     - name: Upload test coverage
+      if: steps.changes.outputs.infra == 'true'
       uses: codecov/codecov-action@v4
       with:
         name: api-unit
@@ -53,15 +61,18 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: dorny/paths-filter@v3
+      id: changes
       with:
         filters: |
           web:
             - 'web/**'
     - name: Setup NodeJS
+      if: steps.changes.outputs.web == 'true'
       uses: actions/setup-node@v4
       with:
         node-version: '20.x'
     - uses: actions/cache@v4
+      if: steps.changes.outputs.web == 'true'
       with:
         path: |
           ~/.npm
@@ -70,12 +81,16 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
     - run: npm ci
+      if: steps.changes.outputs.web == 'true'
       working-directory: ${{ github.workspace }}/web/
     - run: npm run build --if-present
+      if: steps.changes.outputs.web == 'true'
       working-directory: ${{ github.workspace }}/web/
     - run: npm run test -- --config ${{ github.workspace }}/web/jest.config.ts
+      if: steps.changes.outputs.web == 'true'
       working-directory: ${{ github.workspace }}/web/
     - name: Upload test coverage
+      if: steps.changes.outputs.web == 'true'
       uses: codecov/codecov-action@v4
       with:
         fail_ci_if_error: true
@@ -90,23 +105,29 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: dorny/paths-filter@v3
+      id: changes
       with:
         filters: |
           infra:
             - 'infra/**'
     - name: Setup NodeJS
+      if: steps.changes.outputs.infra == 'true'
       uses: actions/setup-node@v4
       with:
         node-version: '20.x'
         cache: 'npm'
         cache-dependency-path: ${{ github.workspace }}/infra/package-lock.json
     - run: npm ci
+      if: steps.changes.outputs.infra == 'true'
       working-directory: ${{ github.workspace }}/infra/
     - run: npm run build --if-present
+      if: steps.changes.outputs.infra == 'true'
       working-directory: ${{ github.workspace }}/infra/
     - run: npm run test -- --config ${{ github.workspace }}/infra/jest.config.ts
+      if: steps.changes.outputs.infra == 'true'
       working-directory: ${{ github.workspace }}/infra/
     - name: Upload test coverage
+      if: steps.changes.outputs.infra == 'true'
       uses: codecov/codecov-action@v4
       with:
         codecov_yml_path: ${{ github.workspace }}/codecov.yml
