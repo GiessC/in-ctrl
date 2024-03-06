@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using FastEndpoints;
 
@@ -5,6 +6,7 @@ namespace InControl.Api.Features.Examples;
 
 public class ExampleGroup : Group
 {
+    [ExcludeFromCodeCoverage]
     public ExampleGroup()
     {
         Configure(
