@@ -15,7 +15,7 @@ public class ExampleGroup : Group
             {
                 ep.Description(x =>
                     x.Produces((int)HttpStatusCode.OK)
-                        .WithTags("Example")
+                        .WithTags("IJustMessedEverythingUp")
                         .WithSummary("Example endpoints for the InControl API.")
                 );
             }
