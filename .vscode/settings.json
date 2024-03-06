@@ -10,5 +10,10 @@
     "source.fixAll": "always",
     "source.organizeImports": "always"
   },
-  "prettier.configPath": ".prettierrc"
+  "prettier.configPath": ".prettierrc",
+  "cSpell.words": [
+    "carryforward",
+    "codecov",
+    "Xunit"
+  ]
 }

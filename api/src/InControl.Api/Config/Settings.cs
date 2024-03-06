@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace InControl.Api.Config;
 
+[ExcludeFromCodeCoverage]
 public class Settings
 {
     public static readonly string KEY_NAME = "Settings";

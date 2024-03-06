@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.RateLimiting;
 using HealthChecks.ApplicationStatus.DependencyInjection;
 using InControl.Api.Config;
@@ -8,6 +9,7 @@ using Polly.Timeout;
 
 namespace InControl.Api.Extensions.Startup;
 
+[ExcludeFromCodeCoverage]
 public static class StartupExtensions
 {
     public static IConfigurationSection LoadSettings(this WebApplicationBuilder builder)
