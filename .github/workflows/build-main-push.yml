@@ -1,34 +1,10 @@
 name: Build and Test
-on:
-  pull_request:
+on: 
+  push: 
     branches: [ main ]
 
 jobs:
-  detect-changes:
-    name: Detect File Changes
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: read
-    outputs:
-      infra: ${{ steps.changes.outputs.infra }}
-      api: ${{ steps.changes.outputs.api }}
-      web: ${{ steps.changes.outputs.web }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v3
-        id: changes
-        with:
-          base: ${{ github.ref }}
-          filters: |
-            infra:
-              - 'infra/**'
-            api:
-              - 'api/**'
-            web:
-              - 'web/**'
   api-build:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.api == 'true'
     name: API Build and Test
     runs-on: ubuntu-latest
     steps:
@@ -65,8 +41,6 @@ jobs:
         fail_ci_if_error: true
         flags: api-unit
   web-build:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.web == 'true'
     name: Web Build and Test
     runs-on: ubuntu-latest
     steps:
@@ -99,8 +73,6 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
         verbose: true
   infra-build:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.infra == 'true'
     name: Infrastructure Build and Test
     runs-on: ubuntu-latest
     steps:
