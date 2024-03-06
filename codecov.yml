@@ -6,7 +6,7 @@ coverage:
   range: "80...100"
   status:
     project:
-      default:
+      api-unit:
         target: 80%
         threshold: 1%
         branches:
@@ -16,11 +16,31 @@ coverage:
         only_pulls: false
         flags:
           - api-unit
-          - web-unit
-          - infra-unit
         paths:
           - api/
+      web-unit:
+        target: 80%
+        threshold: 1%
+        branches:
+          - main
+          - github-actions-setup
+        if_ci_failed: error
+        only_pulls: false
+        flags:
+          - web-unit
+        paths:
           - web/
+      infra-unit:
+        target: 80%
+        threshold: 1%
+        branches:
+          - main
+          - github-actions-setup
+        if_ci_failed: error
+        only_pulls: false
+        flags:
+          - infra-unit
+        paths:
           - infra/
 
 flag_management:
@@ -30,18 +50,16 @@ flag_management:
       - type: project
         target: 80%
         threshold: 1%
-      - type: patch
-        target: 85%
   individual_flags:
-    - name: api
+    - name: api-unit
       paths:
-      - api/
+        - api/
       carryforward: true
-    - name: web
+    - name: web-unit
       paths:
-      - web/
+        - web/
       carryforward: true
-    - name: infra
+    - name: infra-unit
       paths:
-      - infra/
+        - infra/
       carryforward: true
