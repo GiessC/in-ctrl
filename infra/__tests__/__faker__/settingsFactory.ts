@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { RemovalPolicy } from 'aws-cdk-lib';
 import type Settings from '../../src/lib/config/settings';
 
-const createRandomSettings = (): Settings => {
+const createRandomSettings = (removalPolicy?: RemovalPolicy): Settings => {
     return {
         AWS_ACCOUNT: faker.string.alphanumeric({
             length: {
@@ -13,7 +13,9 @@ const createRandomSettings = (): Settings => {
         AWS_REGION: faker.string.alpha(),
         CERTIFICATE_ARN: faker.string.alphanumeric(),
         HOSTED_ZONE_ID: faker.string.alphanumeric(),
-        REMOVAL_POLICY: faker.helpers.enumValue(RemovalPolicy),
+        REMOVAL_POLICY: removalPolicy
+            ? removalPolicy
+            : faker.helpers.enumValue(RemovalPolicy),
     };
 };
 

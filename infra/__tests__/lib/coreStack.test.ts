@@ -1,4 +1,4 @@
-import { App } from 'aws-cdk-lib';
+import { App, RemovalPolicy } from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
 import CoreStack from '../../src/lib/stacks/coreStack';
 import createRandomSettings from '../__faker__/settingsFactory';
@@ -10,7 +10,7 @@ describe('coreStack', () => {
             const app = new App();
 
             // When
-            const settings = createRandomSettings();
+            const settings = createRandomSettings(RemovalPolicy.DESTROY);
             const coreStack = new CoreStack(app, 'TestCore', {
                 settings,
             });
