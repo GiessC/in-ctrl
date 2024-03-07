@@ -1,35 +1,39 @@
-import { Duration, RemovalPolicy, Stack, type StackProps } from 'aws-cdk-lib';
+import { Duration, RemovalPolicy } from 'aws-cdk-lib';
+import { Certificate } from 'aws-cdk-lib/aws-certificatemanager';
 import {
     AccountRecovery,
     Mfa,
     UserPool,
     UserPoolClient,
     UserPoolClientIdentityProvider,
+    UserPoolDomain,
     VerificationEmailStyle,
 } from 'aws-cdk-lib/aws-cognito';
-import { type Construct } from 'constructs';
-import type Settings from '../config/Settings';
+import { Construct } from 'constructs';
+import type Settings from '../../config/settings';
 
-export interface AuthStackProps extends StackProps {
+export interface AuthConstructProps {
     readonly settings: Settings;
 }
 
-export class AuthStack extends Stack {
+export class AuthModule extends Construct {
     public readonly userPool: UserPool;
     public readonly client: UserPoolClient;
+    public readonly domain: UserPoolDomain;
 
-    constructor(scope: Construct, id: string, props?: AuthStackProps) {
-        super(scope, id, props);
+    constructor(scope: Construct, id: string, props: AuthConstructProps) {
+        super(scope, id);
         const settings = props?.settings;
-        this.userPool = this.CreateUserPool(id, settings?.removalPolicy);
+        this.userPool = this.CreateUserPool(id, settings?.REMOVAL_POLICY);
         this.client = this.CreateUserPoolClient(id);
+        this.domain = this.CreateUserPoolDomain(id, settings.CERTIFICATE_ARN);
     }
 
     private CreateUserPool(
         id: string,
         removalPolicy: RemovalPolicy = RemovalPolicy.DESTROY,
     ): UserPool {
-        return new UserPool(this, `${id}-InControl-Users`, {
+        return new UserPool(this, `${id}-Users`, {
             accountRecovery: AccountRecovery.EMAIL_ONLY,
             deletionProtection: removalPolicy !== RemovalPolicy.DESTROY,
             deviceTracking: {
@@ -72,7 +76,7 @@ export class AuthStack extends Stack {
     }
 
     private CreateUserPoolClient(id: string) {
-        return new UserPoolClient(this, `${id}-InControl-Users-Client`, {
+        return new UserPoolClient(this, `${id}-Client`, {
             userPool: this.userPool,
             accessTokenValidity: Duration.hours(1),
             authFlows: {
@@ -89,6 +93,20 @@ export class AuthStack extends Stack {
             supportedIdentityProviders: [
                 UserPoolClientIdentityProvider.COGNITO,
             ],
+        });
+    }
+
+    private CreateUserPoolDomain(id: string, certificateArn: string) {
+        return new UserPoolDomain(this, `${id}-Domain`, {
+            userPool: this.userPool,
+            customDomain: {
+                domainName: 'auth.inctrl.tech',
+                certificate: Certificate.fromCertificateArn(
+                    this,
+                    'InControl-Certificate',
+                    certificateArn,
+                ),
+            },
         });
     }
 }
