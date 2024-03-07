@@ -3,6 +3,7 @@ import {
     AccountRecovery,
     Mfa,
     UserPool,
+    UserPoolClient,
     UserPoolClientIdentityProvider,
     VerificationEmailStyle,
 } from 'aws-cdk-lib/aws-cognito';
@@ -14,17 +15,21 @@ export interface AuthStackProps extends StackProps {
 }
 
 export class AuthStack extends Stack {
+    public readonly userPool: UserPool;
+    public readonly client: UserPoolClient;
+
     constructor(scope: Construct, id: string, props?: AuthStackProps) {
         super(scope, id, props);
         const settings = props?.settings;
-        this.CreateUserPool(id, settings?.removalPolicy);
+        this.userPool = this.CreateUserPool(id, settings?.removalPolicy);
+        this.client = this.CreateUserPoolClient(id);
     }
 
     private CreateUserPool(
         id: string,
         removalPolicy: RemovalPolicy = RemovalPolicy.DESTROY,
-    ) {
-        const userPool = new UserPool(this, `${id}-InControl-Users`, {
+    ): UserPool {
+        return new UserPool(this, `${id}-InControl-Users`, {
             accountRecovery: AccountRecovery.EMAIL_ONLY,
             deletionProtection: removalPolicy !== RemovalPolicy.DESTROY,
             deviceTracking: {
@@ -64,7 +69,11 @@ export class AuthStack extends Stack {
                 emailStyle: VerificationEmailStyle.LINK,
             },
         });
-        userPool.addClient(`${id}-InControl-Users-Client`, {
+    }
+
+    private CreateUserPoolClient(id: string) {
+        return new UserPoolClient(this, `${id}-InControl-Users-Client`, {
+            userPool: this.userPool,
             accessTokenValidity: Duration.hours(1),
             authFlows: {
                 userSrp: true,
