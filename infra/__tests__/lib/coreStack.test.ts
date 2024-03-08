@@ -96,14 +96,14 @@ describe('coreStack', () => {
             // Then
             template.hasResourceProperties('AWS::Cognito::UserPoolDomain', {
                 CustomDomainConfig: {
-                    CertificateArn: settings.CERTIFICATE_ARN,
+                    CertificateArn: settings.DomainSettings.CertificateArn,
                 },
                 Domain: 'auth.inctrl.tech',
             });
         });
     });
 
-    describe('NetworkModule', () => {
+    describe('DomainModule', () => {
         it('Creates Route53 ARecord for Cognito domain', () => {
             // Given
             const app = new App();
@@ -118,7 +118,7 @@ describe('coreStack', () => {
             // Then
             template.hasResourceProperties('AWS::Route53::RecordSet', {
                 Type: 'A',
-                HostedZoneId: settings.HOSTED_ZONE_ID,
+                HostedZoneId: settings.DomainSettings.HostedZoneId,
             });
         });
     });

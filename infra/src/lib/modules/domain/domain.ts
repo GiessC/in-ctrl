@@ -2,29 +2,29 @@ import { UserPoolDomain } from 'aws-cdk-lib/aws-cognito';
 import { ARecord, HostedZone, RecordTarget } from 'aws-cdk-lib/aws-route53';
 import { UserPoolDomainTarget } from 'aws-cdk-lib/aws-route53-targets';
 import { Construct } from 'constructs';
-import Settings from '../../config/settings';
+import { Settings } from '../../common/settings';
 
-interface NetworkConstructProps {
+interface DomainModuleProps {
     settings: Settings;
     userPoolDomain: UserPoolDomain;
 }
 
-export default class NetworkModule extends Construct {
+export default class DomainModule extends Construct {
     constructor(
         scope: Construct,
         id: string,
-        { settings, userPoolDomain }: NetworkConstructProps,
+        { settings, userPoolDomain }: DomainModuleProps,
     ) {
         super(scope, id);
 
-        this.CreateAuthARecord(
+        this.createAuthARecord(
             `${id}-Auth`,
-            settings.HOSTED_ZONE_ID,
+            settings.DomainSettings.HostedZoneId,
             userPoolDomain,
         );
     }
 
-    private CreateAuthARecord(
+    private createAuthARecord(
         id: string,
         zoneId: string,
         userPoolDomain: UserPoolDomain,

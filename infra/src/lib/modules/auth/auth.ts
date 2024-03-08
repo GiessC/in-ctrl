@@ -10,26 +10,25 @@ import {
     VerificationEmailStyle,
 } from 'aws-cdk-lib/aws-cognito';
 import { Construct } from 'constructs';
-import type Settings from '../../config/settings';
-
-export interface AuthConstructProps {
-    readonly settings: Settings;
-}
+import DefaultConstructProps from '../../common/defaultConstructProps';
 
 export class AuthModule extends Construct {
     public readonly userPool: UserPool;
     public readonly client: UserPoolClient;
     public readonly domain: UserPoolDomain;
 
-    constructor(scope: Construct, id: string, props: AuthConstructProps) {
+    constructor(scope: Construct, id: string, props: DefaultConstructProps) {
         super(scope, id);
         const settings = props?.settings;
-        this.userPool = this.CreateUserPool(id, settings?.REMOVAL_POLICY);
-        this.client = this.CreateUserPoolClient(id);
-        this.domain = this.CreateUserPoolDomain(id, settings.CERTIFICATE_ARN);
+        this.userPool = this.createUserPool(id, settings.RemovalPolicy);
+        this.client = this.createUserPoolClient(id);
+        this.domain = this.createUserPoolDomain(
+            id,
+            settings.DomainSettings.CertificateArn,
+        );
     }
 
-    private CreateUserPool(
+    private createUserPool(
         id: string,
         removalPolicy: RemovalPolicy = RemovalPolicy.DESTROY,
     ): UserPool {
@@ -75,7 +74,7 @@ export class AuthModule extends Construct {
         });
     }
 
-    private CreateUserPoolClient(id: string) {
+    private createUserPoolClient(id: string) {
         return new UserPoolClient(this, `${id}-Client`, {
             userPool: this.userPool,
             accessTokenValidity: Duration.hours(1),
@@ -96,7 +95,7 @@ export class AuthModule extends Construct {
         });
     }
 
-    private CreateUserPoolDomain(id: string, certificateArn: string) {
+    private createUserPoolDomain(id: string, certificateArn: string) {
         return new UserPoolDomain(this, `${id}-Domain`, {
             userPool: this.userPool,
             customDomain: {

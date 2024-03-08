@@ -1,0 +1,5 @@
+{
+    "RemovalPolicy": "retain",
+    "CertificateArn": "",
+    "HostedZoneId": ""
+}

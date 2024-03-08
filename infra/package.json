@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
+    "@types/config": "^3.3.3",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.6",
     "@types/source-map-support": "^0.5.10",
@@ -26,10 +27,12 @@
     "@aws-cdk/assets": "^1.204.0",
     "@aws-cdk/region-info": "^2.130.0",
     "aws-cdk-lib": "^2.124.0",
+    "config": "^3.3.11",
     "constructs": "^10.3.0",
     "dotenv": "^16.4.5",
     "inversify": "^6.0.2",
     "reflect-metadata": "^0.2.1",
-    "source-map-support": "^0.5.21"
+    "source-map-support": "^0.5.21",
+    "yup": "^1.4.0"
   }
 }

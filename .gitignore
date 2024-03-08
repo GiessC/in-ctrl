@@ -1,3 +1,4 @@
 # Local Configurations
 .env.local
 appsettings.local.json
+settings.local.json
