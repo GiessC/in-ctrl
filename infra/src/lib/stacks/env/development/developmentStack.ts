@@ -1,4 +1,4 @@
-import { type StackProps } from 'aws-cdk-lib';
+import { StackProps } from 'aws-cdk-lib';
 import { type Construct } from 'constructs';
 import loadSettings, { type Settings } from '../../../common/settings';
 import EnvironmentStack from '../environmentStack';

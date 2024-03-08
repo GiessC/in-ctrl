@@ -10,7 +10,8 @@ export default class LocalStack extends EnvironmentStack {
     constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);
         this._settings = loadSettings(LocalStack.SETTINGS_FILE);
-        this.createStacks();
+        console.info(this._settings);
+        this.createStacks(props?.env);
     }
 
     protected get settings(): Settings {

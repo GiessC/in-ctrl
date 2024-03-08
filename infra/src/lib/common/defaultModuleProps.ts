@@ -1,5 +1,5 @@
 import { type Settings } from './settings';
 
-export default interface DefaultConstructProps {
+export default interface DefaultModuleProps {
     readonly settings: Settings;
 }

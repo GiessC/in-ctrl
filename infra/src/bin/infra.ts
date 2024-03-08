@@ -10,6 +10,7 @@ const env: Environment = {
     account: process.env.AWS_ACCOUNT,
     region: process.env.AWS_REGION,
 };
+console.info(`Using AWS environment: ${env.account} ${env.region}`);
 const environment = app.node.tryGetContext('environment');
 
 // Use PascalCase for stack IDs. Let AWS pick names for all resources.
@@ -22,7 +23,7 @@ if (!environment || environment === 'development') {
     console.info(
         `Using local environment. CloudFormation stacks will be created using ID=Ctrl-${environment}`,
     );
-    new LocalStack(app, `Ctrl-${environment}`);
+    new LocalStack(app, `Ctrl-${environment}`, { env });
 }
 
 app.synth();

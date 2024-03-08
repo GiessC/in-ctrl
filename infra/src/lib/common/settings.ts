@@ -16,21 +16,24 @@ export interface AwsSettings {
 export interface DomainSettings {
     readonly CertificateArn: string;
     readonly HostedZoneId: string;
+    readonly DomainName: string;
 }
 
 const SCHEMA: Schema = object<Settings>().shape({
     AwsSettings: object<AwsSettings>()
         .shape({
-            Profile: string().required(),
-            Region: string().required(),
+            Profile: string().defined().nonNullable().required(),
+            Region: string().defined().nonNullable().required(),
         })
         .optional()
         .notRequired(),
     DomainSettings: object<DomainSettings>()
         .shape({
-            CertificateArn: string().required(),
-            HostedZoneId: string().required(),
+            CertificateArn: string().defined().nonNullable().required(),
+            HostedZoneId: string().defined().nonNullable().required(),
+            DomainName: string().defined().nonNullable().required(),
         })
+        .defined()
         .nonNullable()
         .required(),
     RemovalPolicy: string()

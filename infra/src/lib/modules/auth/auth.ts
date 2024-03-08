@@ -10,14 +10,14 @@ import {
     VerificationEmailStyle,
 } from 'aws-cdk-lib/aws-cognito';
 import { Construct } from 'constructs';
-import DefaultConstructProps from '../../common/defaultConstructProps';
+import DefaultModuleProps from '../../common/defaultModuleProps';
 
 export class AuthModule extends Construct {
     public readonly userPool: UserPool;
     public readonly client: UserPoolClient;
     public readonly domain: UserPoolDomain;
 
-    constructor(scope: Construct, id: string, props: DefaultConstructProps) {
+    constructor(scope: Construct, id: string, props: DefaultModuleProps) {
         super(scope, id);
         const settings = props?.settings;
         this.userPool = this.createUserPool(id, settings.RemovalPolicy);

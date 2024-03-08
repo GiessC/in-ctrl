@@ -1,14 +1,15 @@
-import { Stack } from 'aws-cdk-lib';
-import { Settings } from '../../common/settings';
+import { Environment, Stack } from 'aws-cdk-lib';
+import { type Settings } from '../../common/settings';
 import CoreStack from '../coreStack';
 
 export default abstract class EnvironmentStack extends Stack {
-    protected createStacks(): void {
-        this.createCoreStack();
+    protected createStacks(awsEnv?: Environment): void {
+        this.createCoreStack(awsEnv);
     }
 
-    private createCoreStack(): void {
+    private createCoreStack(awsEnv?: Environment): void {
         new CoreStack(this, 'Core', {
+            env: awsEnv,
             settings: this.settings,
         });
     }
