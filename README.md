@@ -1,6 +1,6 @@
-# in-control
-InControl is a open-source version control system built for ultimate quality control. "Git" in control with InControl
-[![codecov](https://codecov.io/github/GiessC/in-control/graph/badge.svg?token=M3638JZAFK)](https://codecov.io/github/GiessC/in-control)
+# InCtrl
+InCtrl is a open-source version control system built for ultimate quality control. "Git" in control with InCtrl
+[![codecov](https://codecov.io/gh/GiessC/in-ctrl/graph/badge.svg?token=M3638JZAFK)](https://codecov.io/gh/GiessC/in-ctrl)
 
 # About
-InControl is built using Next.js + TypeScript on the frontend, .NET for our API(s), and Amazon Web Services for both.
+InCtrl is built using Next.js + TypeScript + AWS SDK on the frontend, C# + .NET + AWS SDK for our API, and the TypeScript AWS CDK for our Infrastructure as Code (IaC).
