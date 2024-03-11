@@ -60,7 +60,6 @@ jobs:
       with:
         name: api-unit
         token: ${{ secrets.CODECOV_TOKEN }}
-        slug: GiessC/in-control
         directory: ${{ github.workspace }}/api/
         fail_ci_if_error: true
         flags: api-unit
