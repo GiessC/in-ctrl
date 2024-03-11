@@ -60,7 +60,6 @@ jobs:
       with:
         name: api-unit
         token: ${{ secrets.CODECOV_TOKEN }}
-        slug: GiessC/in-control
         directory: ${{ github.workspace }}/api/
         fail_ci_if_error: true
         flags: api-unit
@@ -85,9 +84,9 @@ jobs:
           ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
     - run: npm ci
       working-directory: ${{ github.workspace }}/web/
-    - run: npm run build --if-present
+    - run: npm run build
       working-directory: ${{ github.workspace }}/web/
-    - run: npm run test -- --config ${{ github.workspace }}/web/jest.config.ts
+    - run: npm run test -- --error-on-deprecated --ci --config ${{ github.workspace }}/web/jest.config.ts --maxWorkers=1
       working-directory: ${{ github.workspace }}/web/
     - name: Upload test coverage
       uses: codecov/codecov-action@v4
@@ -113,9 +112,9 @@ jobs:
         cache-dependency-path: ${{ github.workspace }}/infra/package-lock.json
     - run: npm ci
       working-directory: ${{ github.workspace }}/infra/
-    - run: npm run build --if-present
+    - run: npm run build
       working-directory: ${{ github.workspace }}/infra/
-    - run: npm run test -- --config ${{ github.workspace }}/infra/jest.config.ts
+    - run: npm run test -- --error-on-deprecated --ci --config ${{ github.workspace }}/infra/jest.config.ts --maxWorkers=1
       working-directory: ${{ github.workspace }}/infra/
     - name: Upload test coverage
       uses: codecov/codecov-action@v4

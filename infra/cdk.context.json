@@ -1,0 +1,10 @@
+{
+  "hosted-zone:account=058264550550:domainName=inctrl.tech:privateZone=false:region=us-east-2": {
+    "Id": "/hostedzone/Z0481010JOQ8UWPIAZTY",
+    "Name": "inctrl.tech."
+  },
+  "hosted-zone:account=058264550550:domainName=inctrl.tech:privateZone=false:region=us-east-1": {
+    "Id": "/hostedzone/Z0481010JOQ8UWPIAZTY",
+    "Name": "inctrl.tech."
+  }
+}

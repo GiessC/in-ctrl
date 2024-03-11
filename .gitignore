@@ -1,0 +1,4 @@
+# Local Configurations
+.env.local
+appsettings.Local.json
+settings.local.json
