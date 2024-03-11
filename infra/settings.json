@@ -1,5 +1,8 @@
 {
-    "RemovalPolicy": "retain",
-    "CertificateArn": "",
-    "HostedZoneId": ""
+    "DomainSettings": {
+        "CertificateArn": "",
+        "HostedZoneId": "",
+        "DomainName": "inctrl.tech"
+    },
+    "RemovalPolicy": "retain"
 }

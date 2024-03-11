@@ -87,7 +87,7 @@ jobs:
       working-directory: ${{ github.workspace }}/web/
     - run: npm run build
       working-directory: ${{ github.workspace }}/web/
-    - run: npm run test -- --config ${{ github.workspace }}/web/jest.config.ts
+    - run: npm run test -- --error-on-deprecated --ci --config ${{ github.workspace }}/web/jest.config.ts --maxWorkers=1
       working-directory: ${{ github.workspace }}/web/
     - name: Upload test coverage
       uses: codecov/codecov-action@v4
@@ -115,7 +115,7 @@ jobs:
       working-directory: ${{ github.workspace }}/infra/
     - run: npm run build
       working-directory: ${{ github.workspace }}/infra/
-    - run: npm run test -- --config ${{ github.workspace }}/infra/jest.config.ts
+    - run: npm run test -- --error-on-deprecated --ci --config ${{ github.workspace }}/infra/jest.config.ts --maxWorkers=1
       working-directory: ${{ github.workspace }}/infra/
     - name: Upload test coverage
       uses: codecov/codecov-action@v4

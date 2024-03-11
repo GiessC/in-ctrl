@@ -4,12 +4,12 @@ import {
     type ICertificate,
 } from 'aws-cdk-lib/aws-certificatemanager';
 import {
-    CloudFrontAllowedCachedMethods,
-    CloudFrontAllowedMethods,
     CloudFrontWebDistribution,
     IDistribution,
     OriginAccessIdentity,
     PriceClass,
+    SSLMethod,
+    SecurityPolicyProtocol,
     ViewerCertificate,
 } from 'aws-cdk-lib/aws-cloudfront';
 import { Bucket, BucketAccessControl } from 'aws-cdk-lib/aws-s3';
@@ -36,23 +36,16 @@ export default class WebModule extends Construct {
         { settings, certificateArn }: WebModuleProps,
     ) {
         super(scope, id);
-        this.createTemporaryWebApp(id, certificateArn, settings);
-    }
-
-    private createTemporaryWebApp(
-        id: string,
-        certificateArn: string,
-        settings: Settings,
-    ) {
         const bucket = this.createWebBucket(
             `${id}-Bucket`,
             settings.RemovalPolicy,
         );
         this.createWebBucketDeployment(`${id}-Deployment`, bucket);
-        this.createCloudfrontDistribution(
+        this._distribution = this.createCloudfrontDistribution(
             id,
             bucket,
             Certificate.fromCertificateArn(this, `${id}-Cert`, certificateArn),
+            settings,
         );
     }
 
@@ -81,7 +74,8 @@ export default class WebModule extends Construct {
         id: string,
         s3Bucket: Bucket,
         certificate: ICertificate,
-    ) {
+        settings: Settings,
+    ): IDistribution {
         const originAccessIdentity = new OriginAccessIdentity(
             this,
             `${id}-OAI`,
@@ -98,10 +92,6 @@ export default class WebModule extends Construct {
                     behaviors: [
                         {
                             isDefaultBehavior: true,
-                            allowedMethods:
-                                CloudFrontAllowedMethods.GET_HEAD_OPTIONS,
-                            cachedMethods:
-                                CloudFrontAllowedCachedMethods.GET_HEAD_OPTIONS,
                         },
                     ],
                     connectionAttempts: 3,
@@ -109,9 +99,15 @@ export default class WebModule extends Construct {
                 },
             ],
             enabled: true,
-            priceClass: PriceClass.PRICE_CLASS_100,
-            viewerCertificate:
-                ViewerCertificate.fromAcmCertificate(certificate),
+            priceClass: PriceClass.PRICE_CLASS_ALL,
+            viewerCertificate: ViewerCertificate.fromAcmCertificate(
+                certificate,
+                {
+                    aliases: [settings.DomainSettings.DomainName],
+                    sslMethod: SSLMethod.SNI,
+                    securityPolicy: SecurityPolicyProtocol.TLS_V1_2_2021,
+                },
+            ),
         });
     }
 }

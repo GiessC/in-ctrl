@@ -12,21 +12,24 @@ import {
 } from 'aws-cdk-lib/aws-route53-targets';
 import { Construct } from 'constructs';
 import Route53Resource from '../../common/resources/route53';
-import { type Settings } from '../../common/settings';
+import { Settings } from '../../common/settings';
 
 interface DomainModuleProps {
     settings: Settings;
     distribution: IDistribution;
-    userPoolDomain?: UserPoolDomain;
+    userPoolDomain: UserPoolDomain;
 }
 
 export default class DomainModule extends Construct {
+    private readonly _settings: Settings;
+
     constructor(
         scope: Construct,
         id: string,
         { settings, distribution, userPoolDomain }: DomainModuleProps,
     ) {
         super(scope, id);
+        this._settings = settings;
         const hostedZone = HostedZone.fromLookup(
             this,
             settings.DomainSettings.HostedZoneId,
@@ -36,12 +39,7 @@ export default class DomainModule extends Construct {
             },
         );
         this.createWebARecord(`${id}-Web`, hostedZone, distribution);
-
-        // this.createAuthARecord(
-        //     `${id}-Auth`,
-        //     hostedZone,
-        //     userPoolDomain,
-        // );
+        this.createAuthRoute53Records(`${id}-Auth`, hostedZone, userPoolDomain);
     }
 
     private createWebARecord(
@@ -49,23 +47,23 @@ export default class DomainModule extends Construct {
         hostedZone: IHostedZone,
         distribution: IDistribution,
     ): ARecord {
-        console.log(hostedZone, distribution);
-        return Route53Resource.createARecord(this, id, {
+        return Route53Resource.createARecord(this, `${id}-A`, {
             target: RecordTarget.fromAlias(new CloudFrontTarget(distribution)),
             zone: hostedZone,
         });
     }
 
-    private createAuthARecord(
+    private createAuthRoute53Records(
         id: string,
         hostedZone: IHostedZone,
         userPoolDomain: UserPoolDomain,
-    ): ARecord {
-        return new ARecord(this, id, {
-            zone: hostedZone,
+    ): void {
+        Route53Resource.createARecord(this, `${id}-A`, {
             target: RecordTarget.fromAlias(
                 new UserPoolDomainTarget(userPoolDomain),
             ),
+            zone: hostedZone,
+            recordName: 'auth',
         });
     }
 }

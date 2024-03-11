@@ -14,5 +14,12 @@ export default abstract class EnvironmentStack extends Stack {
         });
     }
 
+    protected getEnv(settings: Settings): Environment {
+        return {
+            account: settings.AwsSettings?.Account,
+            region: settings.AwsSettings?.Region,
+        };
+    }
+
     protected abstract get settings(): Settings;
 }

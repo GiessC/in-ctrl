@@ -11,20 +11,22 @@ import {
 } from 'aws-cdk-lib/aws-cognito';
 import { Construct } from 'constructs';
 import DefaultModuleProps from '../../common/defaultModuleProps';
+import { type Settings } from '../../common/settings';
 
 export class AuthModule extends Construct {
+    private readonly _settings: Settings;
     public readonly userPool: UserPool;
     public readonly client: UserPoolClient;
     public readonly domain: UserPoolDomain;
 
     constructor(scope: Construct, id: string, props: DefaultModuleProps) {
         super(scope, id);
-        const settings = props?.settings;
-        this.userPool = this.createUserPool(id, settings.RemovalPolicy);
+        this._settings = props?.settings;
+        this.userPool = this.createUserPool(id, this._settings.RemovalPolicy);
         this.client = this.createUserPoolClient(id);
         this.domain = this.createUserPoolDomain(
             id,
-            settings.DomainSettings.CertificateArn,
+            this._settings.DomainSettings.CertificateArn,
         );
     }
 
@@ -92,6 +94,9 @@ export class AuthModule extends Construct {
             supportedIdentityProviders: [
                 UserPoolClientIdentityProvider.COGNITO,
             ],
+            oAuth: {
+                callbackUrls: ['https://localhost'],
+            },
         });
     }
 
@@ -99,10 +104,10 @@ export class AuthModule extends Construct {
         return new UserPoolDomain(this, `${id}-Domain`, {
             userPool: this.userPool,
             customDomain: {
-                domainName: 'auth.inctrl.tech',
+                domainName: `auth.${this._settings.DomainSettings.DomainName}`,
                 certificate: Certificate.fromCertificateArn(
                     this,
-                    'InControl-Certificate',
+                    'InCtrl-Certificate',
                     certificateArn,
                 ),
             },

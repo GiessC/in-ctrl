@@ -2,13 +2,37 @@ import { RemovalPolicy } from 'aws-cdk-lib';
 import path from 'path';
 import { object, string, type Schema } from 'yup';
 
-export interface Settings extends Record<string, unknown> {
+export class Settings {
+    private static _instance?: Settings;
     readonly AwsSettings?: AwsSettings;
     readonly DomainSettings: DomainSettings;
     readonly RemovalPolicy?: RemovalPolicy;
+
+    private constructor(
+        AwsSettings: AwsSettings | undefined,
+        DomainSettings: DomainSettings,
+        RemovalPolicy: RemovalPolicy | undefined,
+    ) {
+        this.AwsSettings = AwsSettings;
+        this.DomainSettings = DomainSettings;
+        this.RemovalPolicy = RemovalPolicy;
+    }
+
+    public static fromJson(filename: string): Settings {
+        this._instance = loadSettings(filename);
+        return this._instance;
+    }
+
+    public static get instance(): Settings {
+        if (!this._instance) {
+            throw new Error('Settings not loaded');
+        }
+        return this._instance;
+    }
 }
 
 export interface AwsSettings {
+    readonly Account: string;
     readonly Profile: string;
     readonly Region: string;
 }

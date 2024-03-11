@@ -4,6 +4,7 @@ import { Settings } from '../../src/lib/common/settings';
 
 const createRandomSettings = (removalPolicy?: RemovalPolicy): Settings => ({
     AwsSettings: {
+        Account: faker.string.alpha(),
         Profile: faker.string.alphanumeric({
             length: {
                 min: 8,
@@ -13,6 +14,7 @@ const createRandomSettings = (removalPolicy?: RemovalPolicy): Settings => ({
         Region: faker.string.alpha(),
     },
     DomainSettings: {
+        DomainName: faker.internet.domainName(),
         CertificateArn: faker.string.alphanumeric(),
         HostedZoneId: faker.string.alphanumeric(),
     },
