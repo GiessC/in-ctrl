@@ -42,7 +42,7 @@ export class AuthModule extends Construct {
                 deviceOnlyRememberedOnUserPrompt: true,
             },
             mfa: Mfa.REQUIRED,
-            mfaMessage: 'Your MFA verification code for InControl is {####}',
+            mfaMessage: 'Your MFA verification code for InCtrl is {####}',
             mfaSecondFactor: {
                 otp: true,
                 sms: false,
@@ -68,9 +68,9 @@ export class AuthModule extends Construct {
                 },
             },
             userVerification: {
-                emailSubject: 'Welcome to InControl! Email Verification',
+                emailSubject: 'Welcome to InCtrl! Email Verification',
                 emailBody:
-                    "We're happy to have you join InControl! Verify your account by clicking on {##Verify Email##}",
+                    "We're glad you're joining InCtrl! Please verify your email by clicking {##Verify Email##}",
                 emailStyle: VerificationEmailStyle.LINK,
             },
         });
