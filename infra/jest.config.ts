@@ -9,9 +9,6 @@ const config: Config = {
     transform: {
         '^.+\\.tsx?$': 'ts-jest',
     },
-    testEnvironmentOptions: {
-        CDK_ENVIRONMENT: JSON.stringify({ environment: 'local' }),
-    },
 };
 
 export default config;

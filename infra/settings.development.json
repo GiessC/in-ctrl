@@ -1,5 +1,8 @@
 {
-    "RemovalPolicy": "destroy",
-    "CertificateArn": "",
-    "HostedZoneId": ""
+    "DomainSettings": {
+        "CertificateArn": "",
+        "HostedZoneId": "",
+        "DomainName": "dev.inctrl.tech"
+    },
+    "RemovalPolicy": "destroy"
 }

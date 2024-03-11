@@ -70,7 +70,7 @@ export class AuthModule extends Construct {
             userVerification: {
                 emailSubject: 'Welcome to InControl! Email Verification',
                 emailBody:
-                    "Hello {username},\n\nWe're happy to have you join InControl! Verify your account by clicking on {##Verify Email##}",
+                    "We're happy to have you join InControl! Verify your account by clicking on {##Verify Email##}",
                 emailStyle: VerificationEmailStyle.LINK,
             },
         });
@@ -107,7 +107,7 @@ export class AuthModule extends Construct {
                 domainName: `auth.${this._settings.DomainSettings.DomainName}`,
                 certificate: Certificate.fromCertificateArn(
                     this,
-                    'InCtrl-Certificate',
+                    `${id}-Cert`,
                     certificateArn,
                 ),
             },
