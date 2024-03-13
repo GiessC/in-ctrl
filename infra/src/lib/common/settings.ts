@@ -40,6 +40,7 @@ export interface AwsSettings {
 export interface DomainSettings {
     readonly CertificateArn: string;
     readonly HostedZoneId: string;
+    readonly BaseDomainName: string;
     readonly DomainName: string;
 }
 
@@ -55,6 +56,7 @@ const SCHEMA: Schema = object<Settings>().shape({
         .shape({
             CertificateArn: string().defined().nonNullable().required(),
             HostedZoneId: string().defined().nonNullable().required(),
+            BaseDomainName: string().defined().nonNullable().required(),
             DomainName: string().defined().nonNullable().required(),
         })
         .defined()

@@ -14,7 +14,6 @@ export default class Route53Resource {
     ): ARecord {
         return new ARecord(scope, id, {
             region: 'us-east-1',
-            deleteExisting: true,
             ...props,
         });
     }
@@ -26,7 +25,6 @@ export default class Route53Resource {
     ): CnameRecord {
         return new CnameRecord(scope, id, {
             region: 'us-east-1',
-            deleteExisting: true,
             ...props,
         });
     }

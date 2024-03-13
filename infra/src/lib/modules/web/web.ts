@@ -5,35 +5,48 @@ import {
 } from 'aws-cdk-lib/aws-certificatemanager';
 import {
     CloudFrontWebDistribution,
-    IDistribution,
     OriginAccessIdentity,
     PriceClass,
     SSLMethod,
     SecurityPolicyProtocol,
     ViewerCertificate,
+    type IDistribution,
 } from 'aws-cdk-lib/aws-cloudfront';
+import {
+    RecordTarget,
+    type ARecord,
+    type IHostedZone,
+} from 'aws-cdk-lib/aws-route53';
+import { CloudFrontTarget } from 'aws-cdk-lib/aws-route53-targets';
 import { Bucket, BucketAccessControl } from 'aws-cdk-lib/aws-s3';
 import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment';
 import { Construct } from 'constructs';
 import path from 'path';
 import type DefaultModuleProps from '../../common/defaultModuleProps';
+import Route53Resource from '../../common/resources/route53';
 import { type Settings } from '../../common/settings';
 
 export interface WebModuleProps extends DefaultModuleProps {
     certificateArn: string;
+    hostedZone: IHostedZone;
 }
 
 export default class WebModule extends Construct {
     private readonly _distribution: IDistribution;
+    private readonly _aRecord: ARecord;
 
     public get distribution(): IDistribution {
         return this._distribution;
     }
 
+    public get aRecord(): ARecord {
+        return this._aRecord;
+    }
+
     constructor(
         scope: Construct,
         id: string,
-        { settings, certificateArn }: WebModuleProps,
+        { settings, certificateArn, hostedZone }: WebModuleProps,
     ) {
         super(scope, id);
         const bucket = this.createWebBucket(
@@ -46,6 +59,11 @@ export default class WebModule extends Construct {
             bucket,
             Certificate.fromCertificateArn(this, `${id}-Cert`, certificateArn),
             settings,
+        );
+        this._aRecord = this.createWebARecord(
+            `${id}-ARecord`,
+            hostedZone,
+            this._distribution,
         );
     }
 
@@ -108,6 +126,17 @@ export default class WebModule extends Construct {
                     securityPolicy: SecurityPolicyProtocol.TLS_V1_2_2021,
                 },
             ),
+        });
+    }
+
+    private createWebARecord(
+        id: string,
+        hostedZone: IHostedZone,
+        distribution: IDistribution,
+    ): ARecord {
+        return Route53Resource.createARecord(this, id, {
+            target: RecordTarget.fromAlias(new CloudFrontTarget(distribution)),
+            zone: hostedZone,
         });
     }
 }

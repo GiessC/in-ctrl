@@ -39,7 +39,6 @@ jobs:
       with:
         name: api-unit
         token: ${{ secrets.CODECOV_TOKEN }}
-        slug: GiessC/in-control
         directory: ${{ github.workspace }}/api/
         fail_ci_if_error: true
         flags: api-unit
@@ -102,7 +101,7 @@ jobs:
         name: infra-unit
         token: ${{ secrets.CODECOV_TOKEN }}
         verbose: true
-    - run: cdk synths
+    - run: cdk synth
       working-directory: ${{ github.workspace }}/infra/
   infra-deploy:
     name: Infrastructure Deploy

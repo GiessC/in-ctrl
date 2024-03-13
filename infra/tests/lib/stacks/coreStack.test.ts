@@ -1,6 +1,6 @@
 import { App, RemovalPolicy } from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
-import CoreStack from '../../../src/lib/stacks/coreStack';
+import CoreStack from '../../../src/lib/stacks/domainStack';
 import createRandomSettings from '../../__faker__/settingsFactory';
 
 jest.mock('aws-cdk-lib/aws-route53');

@@ -10,17 +10,27 @@
     "test": "jest --coverage"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.18",
+    "amazon-cognito-identity-js": "^6.3.12",
+    "formik": "^2.4.5",
     "next": "14.1.0",
+    "next-themes": "^0.2.1",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-icons": "^5.0.1",
+    "uuid": "^9.0.1",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@melt-ui/pp": "^0.3.0",
+    "@melt-ui/svelte": "^0.76.0",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.1",
     "@types/jest": "^29.5.12",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/uuid": "^9.0.8",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.1.0",

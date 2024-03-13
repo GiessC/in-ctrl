@@ -1,5 +1,5 @@
 import { Duration, RemovalPolicy } from 'aws-cdk-lib';
-import { Certificate } from 'aws-cdk-lib/aws-certificatemanager';
+import { type ICertificate } from 'aws-cdk-lib/aws-certificatemanager';
 import {
     AccountRecovery,
     Mfa,
@@ -10,24 +10,27 @@ import {
     VerificationEmailStyle,
 } from 'aws-cdk-lib/aws-cognito';
 import { Construct } from 'constructs';
-import DefaultModuleProps from '../../common/defaultModuleProps';
+import type DefaultModuleProps from '../../common/defaultModuleProps';
 import { type Settings } from '../../common/settings';
 
+interface AuthModuleProps extends DefaultModuleProps {
+    certificate: ICertificate;
+}
+
 export class AuthModule extends Construct {
-    private readonly _settings: Settings;
     public readonly userPool: UserPool;
     public readonly client: UserPoolClient;
     public readonly domain: UserPoolDomain;
 
-    constructor(scope: Construct, id: string, props: DefaultModuleProps) {
+    constructor(
+        scope: Construct,
+        id: string,
+        { certificate, settings }: AuthModuleProps,
+    ) {
         super(scope, id);
-        this._settings = props?.settings;
-        this.userPool = this.createUserPool(id, this._settings.RemovalPolicy);
+        this.userPool = this.createUserPool(id, settings.RemovalPolicy);
         this.client = this.createUserPoolClient(id);
-        this.domain = this.createUserPoolDomain(
-            id,
-            this._settings.DomainSettings.CertificateArn,
-        );
+        this.domain = this.createUserPoolDomain(id, certificate, settings);
     }
 
     private createUserPool(
@@ -100,16 +103,16 @@ export class AuthModule extends Construct {
         });
     }
 
-    private createUserPoolDomain(id: string, certificateArn: string) {
+    private createUserPoolDomain(
+        id: string,
+        certificate: ICertificate,
+        settings: Settings,
+    ) {
         return new UserPoolDomain(this, `${id}-Domain`, {
             userPool: this.userPool,
             customDomain: {
-                domainName: `auth.${this._settings.DomainSettings.DomainName}`,
-                certificate: Certificate.fromCertificateArn(
-                    this,
-                    `${id}-Cert`,
-                    certificateArn,
-                ),
+                domainName: `auth.${settings.DomainSettings.DomainName}`,
+                certificate,
             },
         });
     }
