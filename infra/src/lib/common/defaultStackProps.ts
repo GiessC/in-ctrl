@@ -3,4 +3,5 @@ import { type Settings } from './settings';
 
 export default interface DefaultStackProps extends StackProps {
     readonly settings: Settings;
+    readonly environment: string;
 }

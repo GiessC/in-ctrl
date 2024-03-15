@@ -9,9 +9,9 @@ export default class ProductionStack extends EnvironmentStack {
 
     constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);
-        this._settings = loadSettings(ProductionStack.SETTINGS_FILE);
+        this._settings = loadSettings('prod', ProductionStack.SETTINGS_FILE);
         const env = this.getEnv(this._settings);
-        this.createStacks(env);
+        this.createStacks('prod', env);
     }
 
     protected get settings(): Settings {

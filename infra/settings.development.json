@@ -1,9 +1,0 @@
-{
-    "DomainSettings": {
-        "CertificateArn": "",
-        "HostedZoneId": "",
-        "BaseDomainName": "inctrl.tech",
-        "DomainName": "dev.inctrl.tech"
-    },
-    "RemovalPolicy": "destroy"
-}

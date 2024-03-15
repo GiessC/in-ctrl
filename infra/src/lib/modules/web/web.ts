@@ -15,6 +15,7 @@ import {
 import {
     RecordTarget,
     type ARecord,
+    type ARecordProps,
     type IHostedZone,
 } from 'aws-cdk-lib/aws-route53';
 import { CloudFrontTarget } from 'aws-cdk-lib/aws-route53-targets';
@@ -29,6 +30,7 @@ import { type Settings } from '../../common/settings';
 export interface WebModuleProps extends DefaultModuleProps {
     certificateArn: string;
     hostedZone: IHostedZone;
+    environment: string;
 }
 
 export default class WebModule extends Construct {
@@ -46,7 +48,7 @@ export default class WebModule extends Construct {
     constructor(
         scope: Construct,
         id: string,
-        { settings, certificateArn, hostedZone }: WebModuleProps,
+        { settings, certificateArn, hostedZone, environment }: WebModuleProps,
     ) {
         super(scope, id);
         const bucket = this.createWebBucket(
@@ -61,9 +63,10 @@ export default class WebModule extends Construct {
             settings,
         );
         this._aRecord = this.createWebARecord(
-            `${id}-ARecord`,
+            id,
             hostedZone,
             this._distribution,
+            environment,
         );
     }
 
@@ -133,10 +136,14 @@ export default class WebModule extends Construct {
         id: string,
         hostedZone: IHostedZone,
         distribution: IDistribution,
+        environment: string,
     ): ARecord {
-        return Route53Resource.createARecord(this, id, {
+        const props: ARecordProps = {
             target: RecordTarget.fromAlias(new CloudFrontTarget(distribution)),
             zone: hostedZone,
-        });
+            recordName:
+                environment === 'prod' ? undefined : environment.toLowerCase(),
+        };
+        return Route53Resource.createARecord(this, `${id}-ARecord`, props);
     }
 }

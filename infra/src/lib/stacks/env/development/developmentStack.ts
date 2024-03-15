@@ -9,9 +9,12 @@ export default class DevelopmentStack extends EnvironmentStack {
 
     constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);
-        this._settings = Settings.fromJson(DevelopmentStack.SETTINGS_FILE);
+        this._settings = Settings.fromJson(
+            'dev',
+            DevelopmentStack.SETTINGS_FILE,
+        );
         const env = this.getEnv(this._settings);
-        this.createStacks(env);
+        this.createStacks('dev', env);
     }
 
     protected get settings(): Settings {

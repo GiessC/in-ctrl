@@ -2,24 +2,40 @@ import { RemovalPolicy } from 'aws-cdk-lib';
 import path from 'path';
 import { object, string, type Schema } from 'yup';
 
-export class Settings {
+interface FileSettings extends Record<string, unknown> {
+    AwsSettings?: Record<string, unknown>;
+    DomainSettings: Record<string, unknown>;
+    RemovalPolicy?: Record<string, unknown>;
+}
+
+export interface ISettings {
+    AwsSettings?: AwsSettings;
+    DomainSettings: DomainSettings;
+    RemovalPolicy?: RemovalPolicy;
+}
+
+export class Settings implements ISettings {
     private static _instance?: Settings;
-    readonly AwsSettings?: AwsSettings;
     readonly DomainSettings: DomainSettings;
+    readonly AwsSettings?: AwsSettings;
     readonly RemovalPolicy?: RemovalPolicy;
 
-    private constructor(
-        AwsSettings: AwsSettings | undefined,
-        DomainSettings: DomainSettings,
-        RemovalPolicy: RemovalPolicy | undefined,
-    ) {
-        this.AwsSettings = AwsSettings;
+    protected constructor({
+        DomainSettings,
+        AwsSettings,
+        RemovalPolicy,
+    }: ISettings) {
         this.DomainSettings = DomainSettings;
+        this.AwsSettings = AwsSettings;
         this.RemovalPolicy = RemovalPolicy;
     }
 
-    public static fromJson(filename: string): Settings {
-        this._instance = loadSettings(filename);
+    public static fromISettings(settings: ISettings): Settings {
+        return new Settings(settings);
+    }
+
+    public static fromJson(environment: string, filename: string): Settings {
+        this._instance = loadSettings(environment, filename);
         return this._instance;
     }
 
@@ -73,7 +89,7 @@ const SCHEMA: Schema = object<Settings>().shape({
         ]),
 });
 
-const validateSettings = (settings: object) => {
+const validateSettings = (settings: Record<string, unknown>) => {
     try {
         SCHEMA.validateSync(settings);
     } catch (error: unknown) {
@@ -82,12 +98,18 @@ const validateSettings = (settings: object) => {
     }
 };
 
-const loadSettings = (settingsFile: string): Settings => {
+const loadSettings = (environment: string, settingsFile: string): Settings => {
     const settingsFileLocation = path.join(process.cwd(), settingsFile);
     try {
-        const settings = require(settingsFileLocation);
+        const settings: FileSettings = require(settingsFileLocation);
+        settings.DomainSettings.DomainName =
+            environment === 'prod'
+                ? settings.DomainSettings.BaseDomainName
+                : `${environment.toLowerCase()}.${
+                      settings.DomainSettings.BaseDomainName
+                  }`;
         validateSettings(settings);
-        return settings;
+        return Settings.fromISettings(settings as unknown as ISettings);
     } catch (error: unknown) {
         console.error(
             `An error occured while loading settings file: ${settingsFileLocation}\n${error}\n\nExiting...`,

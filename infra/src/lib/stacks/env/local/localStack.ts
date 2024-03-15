@@ -4,18 +4,24 @@ import loadSettings, { type Settings } from '../../../common/settings';
 import EnvironmentStack from '../environmentStack';
 
 export interface LocalStackProps extends StackProps {
-    test?: boolean;
+    _environment?: string;
 }
 
 export default class LocalStack extends EnvironmentStack {
     private static readonly SETTINGS_FILE = 'settings.local.json';
     private readonly _settings: Settings;
 
-    constructor(scope: Construct, id: string, props?: LocalStackProps) {
+    constructor(
+        scope: Construct,
+        id: string,
+        { _environment: environment, ...props }: LocalStackProps,
+    ) {
         super(scope, id, props);
-        this._settings = loadSettings(LocalStack.SETTINGS_FILE);
+        if (!environment)
+            throw new Error('Environment not provided to LocalStack');
+        this._settings = loadSettings(environment, LocalStack.SETTINGS_FILE);
         const env = this.getEnv(this._settings);
-        this.createStacks(env);
+        this.createStacks(environment, env);
     }
 
     protected get settings(): Settings {

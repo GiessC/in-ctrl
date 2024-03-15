@@ -10,7 +10,7 @@ const environment = app.node.tryGetContext('environment');
 
 // Use PascalCase for stack IDs. Let AWS pick names for all resources.
 // https://docs.aws.amazon.com/prescriptive-guidance/latest/best-practices-cdk-typescript-iac/best-practices.html
-if (!environment || environment === 'development') {
+if (!environment || environment === 'dev') {
     new DevelopmentStack(app, 'Ctrl-Dev');
 } else if (environment === 'production') {
     new ProductionStack(app, 'Ctrl-Prod');
@@ -18,7 +18,9 @@ if (!environment || environment === 'development') {
     console.info(
         `Using local environment. CloudFormation stacks will be created using ID=Ctrl-${environment}`,
     );
-    new LocalStack(app, `Ctrl-${environment}`);
+    new LocalStack(app, `Ctrl-${environment}`, {
+        _environment: environment?.toLowerCase(),
+    });
 }
 
 app.synth();

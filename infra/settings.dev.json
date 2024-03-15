@@ -9,5 +9,5 @@
         "HostedZoneId": "Z0481010JOQ8UWPIAZTY",
         "BaseDomainName": "inctrl.tech"
     },
-    "RemovalPolicy": "retain"
+    "RemovalPolicy": "destroy"
 }
