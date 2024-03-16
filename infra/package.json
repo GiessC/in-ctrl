@@ -25,7 +25,7 @@
   "dependencies": {
     "@aws-cdk/assets": "^1.204.0",
     "@aws-cdk/region-info": "^2.130.0",
-    "aws-cdk": "^2.132.1",
+    "aws-cdk": "^2.133.0",
     "aws-cdk-lib": "^2.132.1",
     "config": "^3.3.11",
     "constructs": "^10.3.0",
