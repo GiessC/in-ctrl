@@ -49,7 +49,6 @@ export class Settings implements ISettings {
 
 export interface AwsSettings {
     readonly Account: string;
-    readonly Profile: string;
     readonly Region: string;
 }
 
@@ -63,7 +62,7 @@ export interface DomainSettings {
 const SCHEMA: Schema = object<Settings>().shape({
     AwsSettings: object<AwsSettings>()
         .shape({
-            Profile: string().defined().nonNullable().required(),
+            Account: string().defined().nonNullable().required(),
             Region: string().defined().nonNullable().required(),
         })
         .optional()

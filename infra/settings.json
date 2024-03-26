@@ -1,12 +1,11 @@
 {
     "AwsSettings": {
         "Account": "058264550550",
-        "Profile": "incontrol-dev",
         "Region": "us-east-1"
     },
     "DomainSettings": {
-        "CertificateArn": "arn:aws:acm:us-east-1:058264550550:certificate/f9ea9e60-ab85-4c96-98c9-3140b93bd653",
-        "HostedZoneId": "Z0481010JOQ8UWPIAZTY",
+        "CertificateArn": "arn:aws:acm:us-east-1:058264550550:certificate/db3381b2-556a-4327-95fd-deaea5645389",
+        "HostedZoneId": "Z07577612T2CRUULLO3IF",
         "BaseDomainName": "inctrl.tech"
     },
     "RemovalPolicy": "retain"

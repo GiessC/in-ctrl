@@ -19,7 +19,7 @@ if (!environment || environment === 'dev') {
         `Using local environment. CloudFormation stacks will be created using ID=Ctrl-${environment}`,
     );
     new LocalStack(app, `Ctrl-${environment}`, {
-        _environment: environment?.toLowerCase(),
+        environment: environment?.toLowerCase(),
     });
 }
 

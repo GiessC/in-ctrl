@@ -1,5 +1,4 @@
 import { Duration, RemovalPolicy } from 'aws-cdk-lib';
-import { type ICertificate } from 'aws-cdk-lib/aws-certificatemanager';
 import {
     AccountRecovery,
     Mfa,
@@ -9,34 +8,27 @@ import {
     UserPoolDomain,
     VerificationEmailStyle,
 } from 'aws-cdk-lib/aws-cognito';
-import { ARecord, IHostedZone, RecordTarget } from 'aws-cdk-lib/aws-route53';
-import { UserPoolDomainTarget } from 'aws-cdk-lib/aws-route53-targets';
 import { Construct } from 'constructs';
 import type DefaultModuleProps from '../../common/defaultModuleProps';
-import Route53Resource from '../../common/resources/route53';
-import { type Settings } from '../../common/settings';
 
-interface AuthModuleProps extends DefaultModuleProps {
-    certificate: ICertificate;
-    hostedZone: IHostedZone;
+export interface AuthModuleProps extends DefaultModuleProps {
+    readonly environment: string;
 }
 
 export class AuthModule extends Construct {
     public readonly userPool: UserPool;
     public readonly client: UserPoolClient;
     public readonly domain: UserPoolDomain;
-    public readonly aRecord: ARecord;
 
     constructor(
         scope: Construct,
         id: string,
-        { certificate, hostedZone, settings }: AuthModuleProps,
+        { settings, environment }: AuthModuleProps,
     ) {
         super(scope, id);
         this.userPool = this.createUserPool(id, settings.RemovalPolicy);
         this.client = this.createUserPoolClient(id);
-        this.domain = this.createUserPoolDomain(id, certificate, settings);
-        this.aRecord = this.createARecord(id, hostedZone);
+        this.domain = this.createUserPoolDomain(id, environment);
     }
 
     private createUserPool(
@@ -109,27 +101,12 @@ export class AuthModule extends Construct {
         });
     }
 
-    private createUserPoolDomain(
-        id: string,
-        certificate: ICertificate,
-        settings: Settings,
-    ) {
+    private createUserPoolDomain(id: string, environment: string) {
         return new UserPoolDomain(this, `${id}-Domain`, {
             userPool: this.userPool,
-            customDomain: {
-                domainName: `auth.${settings.DomainSettings.DomainName}`,
-                certificate,
+            cognitoDomain: {
+                domainPrefix: `inctrl-${environment.toLowerCase()}`,
             },
-        });
-    }
-
-    private createARecord(id: string, hostedZone: IHostedZone) {
-        return Route53Resource.createARecord(this, `${id}-ARecord`, {
-            target: RecordTarget.fromAlias(
-                new UserPoolDomainTarget(this.domain),
-            ),
-            zone: hostedZone,
-            recordName: 'auth',
         });
     }
 }

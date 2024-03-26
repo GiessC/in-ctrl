@@ -3,6 +3,7 @@ import { type IHostedZone } from 'aws-cdk-lib/aws-route53';
 import { type Construct } from 'constructs';
 import type DefaultStackProps from '../common/defaultStackProps';
 import { type Settings } from '../common/settings';
+import { AuthModule } from '../modules/auth/auth';
 import DomainModule from '../modules/domain/domain';
 import WebModule from '../modules/web/web';
 
@@ -31,6 +32,7 @@ export default class CoreStack extends Stack {
             environment,
             settings,
         );
+        this.addAuthModule(id, environment, settings);
         webModule.node.addDependency(this._domainModule);
     }
 
@@ -45,6 +47,17 @@ export default class CoreStack extends Stack {
             hostedZone,
             environment,
             settings,
+        });
+    }
+
+    private addAuthModule(
+        id: string,
+        environment: string,
+        settings: Settings,
+    ): AuthModule {
+        return new AuthModule(this, `${id}-Auth`, {
+            settings,
+            environment,
         });
     }
 

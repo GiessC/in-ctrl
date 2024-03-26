@@ -4,7 +4,7 @@ import loadSettings, { type Settings } from '../../../common/settings';
 import EnvironmentStack from '../environmentStack';
 
 export interface LocalStackProps extends StackProps {
-    _environment?: string;
+    readonly environment?: string;
 }
 
 export default class LocalStack extends EnvironmentStack {
@@ -14,7 +14,7 @@ export default class LocalStack extends EnvironmentStack {
     constructor(
         scope: Construct,
         id: string,
-        { _environment: environment, ...props }: LocalStackProps,
+        { environment, ...props }: LocalStackProps,
     ) {
         super(scope, id, props);
         if (!environment)
